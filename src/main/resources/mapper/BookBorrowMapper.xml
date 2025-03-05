@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.BookBorrowMapper">
+
+    <resultMap id="BookBorrowResultMap" type="com.example.bookmanage.entity.BookBorrow">
+        <id property="id" column="id"/>
+        <result property="bookId" column="book_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="borrowDate" column="borrow_date"/>
+        <result property="dueDate" column="due_date"/>
+        <result property="returnDate" column="return_date"/>
+    </resultMap>
+
+    <!-- 插入借阅记录 -->
+    <insert id="insert" parameterType="com.example.bookmanage.entity.BookBorrow" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO book_borrows (book_id, user_id, borrow_date, due_date)
+        VALUES (#{bookId}, #{userId}, #{borrowDate}, #{dueDate})
+    </insert>
+
+    <!-- 根据 ID 查询借阅记录 -->
+    <select id="findById" resultMap="BookBorrowResultMap">
+        SELECT * FROM book_borrows WHERE id = #{id}
+    </select>
+
+    <!-- 根据用户 ID 查询借阅记录 -->
+    <select id="findByUserId" resultMap="BookBorrowResultMap">
+        SELECT * FROM book_borrows WHERE user_id = #{userId}
+    </select>
+
+    <!-- 更新归还日期 -->
+    <update id="updateReturnDate">
+        UPDATE book_borrows SET return_date = #{returnDate} WHERE id = #{borrowId}
+    </update>
+
+    <!-- 查询所有借阅记录 -->
+    <select id="findAll" resultMap="BookBorrowResultMap">
+        SELECT * FROM book_borrows
+    </select>
+
+    <!-- 新增：统计每本书的借阅次数 -->
+    <select id="findBorrowStats" resultType="com.example.bookmanage.mapper.BookBorrowMapper$BookBorrowStats">
+        SELECT book_id AS bookId, COUNT(*) AS borrowCount
+        FROM book_borrows
+        GROUP BY book_id
+    </select>
+</mapper>

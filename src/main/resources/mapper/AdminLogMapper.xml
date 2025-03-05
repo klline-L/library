@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.AdminLogMapper">
+
+    <!-- 插入日志记录 -->
+    <insert id="insert" parameterType="com.example.bookmanage.entity.AdminLog">
+        INSERT INTO admin_logs (admin_id, action_type, action_detail, action_time)
+        VALUES (#{adminId}, #{actionType}, #{actionDetail}, #{actionTime})
+    </insert>
+
+    <!-- 查询所有日志记录 -->
+    <select id="findAll" resultType="com.example.bookmanage.entity.AdminLog">
+        SELECT id, admin_id, action_type, action_detail, action_time
+        FROM admin_logs
+        ORDER BY action_time DESC
+    </select>
+
+    <!-- 根据管理员 ID 查询日志 -->
+    <select id="findByAdminId" parameterType="long" resultType="com.example.bookmanage.entity.AdminLog">
+        SELECT id, admin_id, action_type, action_detail, action_time
+        FROM admin_logs
+        WHERE admin_id = #{adminId}
+        ORDER BY action_time DESC
+    </select>
+
+    <!-- 删除单条日志 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM admin_logs
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除日志 -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM admin_logs
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

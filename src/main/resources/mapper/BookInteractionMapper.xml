@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.BookInteractionMapper">
+    <insert id="insert" parameterType="BookInteraction">
+        INSERT INTO book_interactions (user_id, book_id, type) VALUES (#{userId}, #{bookId}, #{type})
+    </insert>
+
+    <delete id="deleteInteraction" parameterType="java.util.HashMap">
+        DELETE FROM book_interactions WHERE user_id = #{userId} AND book_id = #{bookId}
+    </delete>
+
+    <select id="countInteractions" parameterType="java.util.HashMap" resultType="int">
+        SELECT COUNT(*) FROM book_interactions WHERE book_id = #{bookId} AND type = #{type}
+    </select>
+
+    <select id="hasInteraction" parameterType="java.util.HashMap" resultType="boolean">
+        SELECT CASE WHEN EXISTS(SELECT 1 FROM book_interactions WHERE user_id = #{userId} AND book_id = #{bookId} AND type = #{type}) THEN true ELSE false END
+    </select>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.SettingsMapper">
+
+    <resultMap id="SettingsResultMap" type="com.example.bookmanage.entity.Settings">
+        <id property="id" column="id"/>
+        <result property="announcement" column="announcement"/>
+        <result property="excerpt" column="excerpt"/>
+        <result property="borrowDays" column="borrow_days"/>
+        <result property="finePerDay" column="fine_per_day"/>
+        <result property="enableNotifications" column="enable_notifications"/>
+    </resultMap>
+
+    <!-- 根据 ID 查询设置 -->
+    <select id="findById" resultMap="SettingsResultMap">
+        SELECT id, announcement, excerpt, borrow_days, fine_per_day, enable_notifications
+        FROM settings WHERE id = #{id}
+    </select>
+
+    <!-- 获取当前系统设置（假设只有一个记录） -->
+    <select id="findSettings" resultMap="SettingsResultMap">
+        SELECT id, announcement, excerpt, borrow_days, fine_per_day, enable_notifications
+        FROM settings LIMIT 1
+    </select>
+
+    <!-- 更新设置，若存在则更新，不存在则插入 -->
+    <update id="update" parameterType="com.example.bookmanage.entity.Settings">
+        INSERT INTO settings (id, announcement, excerpt, borrow_days, fine_per_day, enable_notifications)
+        VALUES (#{id}, #{announcement}, #{excerpt}, #{borrowDays}, #{finePerDay}, #{enableNotifications})
+            ON DUPLICATE KEY UPDATE
+                                 announcement = #{announcement},
+                                 excerpt = #{excerpt},
+                                 borrow_days = #{borrowDays},
+                                 fine_per_day = #{finePerDay},
+                                 enable_notifications = #{enableNotifications}
+    </update>
+</mapper>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>系统设置</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <script>
+        // 显示成功消息并在3秒后隐藏
+        window.onload = function() {
+            const successAlert = document.getElementById('successAlert');
+            if (successAlert) {
+                setTimeout(() => successAlert.style.display = 'none', 3000);
+            }
+        };
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/admin/dashboard">管理员仪表板</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/books}">图书管理</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">用户管理</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/reports}">报告生成</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/admin/settings}">系统设置</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/logs}">活动日志</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">退出登录</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-4">
+    <h1>系统设置</h1>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" id="successAlert" class="alert alert-success" th:text="${success}"></div>
+    <form th:action="@{/admin/settings}" method="post" th:object="${settings}">
+        <div class="mb-3">
+            <label for="borrowDays" class="form-label">借阅期限（天）:</label>
+            <input type="number" id="borrowDays" th:field="*{borrowDays}" class="form-control" min="1" max="365" required>
+        </div>
+        <div class="mb-3">
+            <label for="finePerDay" class="form-label">逾期罚款（元/天）:</label>
+            <input type="number" step="0.01" id="finePerDay" th:field="*{finePerDay}" class="form-control" min="0" max="999.99" required>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" id="enableNotifications" th:field="*{enableNotifications}" class="form-check-input">
+            <label for="enableNotifications" class="form-check-label">启用通知</label>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+    </form>
+</div>
+</body>
+</html>

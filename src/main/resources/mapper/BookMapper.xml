@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.BookMapper">
+
+    <!-- 定义 Result Map -->
+    <resultMap id="BookResultMap" type="com.example.bookmanage.entity.Book">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="isbn" column="isbn"/>
+        <result property="price" column="price"/>
+        <result property="viewCount" column="viewCount"/>
+        <result property="coverImageUrl" column="coverImageUrl"/>
+        <result property="status" column="status"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="addedDate" column="added_date"/>
+        <result property="likeCount" column="like_count"/>
+    </resultMap>
+
+    <!-- 查询所有图书 -->
+    <select id="findAll" resultMap="BookResultMap">
+        SELECT * FROM books
+    </select>
+
+    <!-- 分页查询图书 -->
+    <select id="findBooksByPage" resultMap="BookResultMap">
+        SELECT * FROM books LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 按添加日期排序分页查询 -->
+    <select id="findBooksByPageOrderByAddedDate" resultMap="BookResultMap">
+        SELECT * FROM books ORDER BY added_date DESC LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 按点赞数排序分页查询 -->
+    <select id="findBooksByPageOrderByLikeCount" resultMap="BookResultMap">
+        SELECT * FROM books ORDER BY like_count DESC LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 获取最新图书 -->
+    <select id="findTopByOrderByAddedDate" resultMap="BookResultMap">
+        SELECT * FROM books ORDER BY added_date DESC LIMIT #{limit}
+    </select>
+
+    <!-- 获取热门图书 -->
+    <select id="findTopByOrderByLikeCount" resultMap="BookResultMap">
+        SELECT * FROM books ORDER BY like_count DESC LIMIT #{limit}
+    </select>
+
+    <!-- 根据 ID 查询图书 -->
+    <select id="findById" resultMap="BookResultMap">
+        SELECT * FROM books WHERE id = #{id}
+    </select>
+
+    <!-- 插入新图书 -->
+    <insert id="insert" parameterType="com.example.bookmanage.entity.Book" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO books (title, author, isbn, price, viewCount, coverImageUrl, status, category_id, added_date, like_count)
+        VALUES (#{title}, #{author}, #{isbn}, #{price}, #{viewCount}, #{coverImageUrl}, #{status}, #{categoryId}, #{addedDate}, #{likeCount})
+    </insert>
+
+    <!-- 更新图书 -->
+    <update id="update" parameterType="com.example.bookmanage.entity.Book">
+        UPDATE books
+        SET title = #{title},
+            author = #{author},
+            isbn = #{isbn},
+            price = #{price},
+            viewCount = #{viewCount},
+            coverImageUrl = #{coverImageUrl},
+            status = #{status},
+            category_id = #{categoryId},
+            added_date = #{addedDate},
+            like_count = #{likeCount}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除图书 -->
+    <delete id="delete">
+        DELETE FROM books WHERE id = #{id}
+    </delete>
+
+    <!-- 增加查看次数 -->
+    <update id="incrementViewCount">
+        UPDATE books SET viewCount = viewCount + 1 WHERE id = #{bookId}
+    </update>
+
+    <!-- 更新图书状态 -->
+    <update id="updateStatus">
+        UPDATE books SET status = #{status} WHERE id = #{bookId}
+    </update>
+
+    <!-- 搜索图书 -->
+    <select id="searchBooks" resultMap="BookResultMap">
+        SELECT * FROM books
+        WHERE (#{title} IS NULL OR title LIKE CONCAT('%', #{title}, '%'))
+          AND (#{author} IS NULL OR author LIKE CONCAT('%', #{author}, '%'))
+          AND (#{categoryId} IS NULL OR category_id = #{categoryId})
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 按类别查询图书 -->
+    <select id="getBooksByCategory" resultMap="BookResultMap">
+        SELECT * FROM books WHERE category_id = #{categoryId} LIMIT #{limit} OFFSET #{offset}
+    </select>
+</mapper>

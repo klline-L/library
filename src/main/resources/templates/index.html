@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>图书管理系统 - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .book-list { display: flex; flex-wrap: wrap; gap: 15px; }
+        .book { width: 150px; text-align: center; }
+        .book img { width: 100px; height: 150px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">图书管理系统</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" th:href="@{/books}">图书列表</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/user/dashboard}">个人空间</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/register}">注册</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/login}">登录</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/logout}">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1>欢迎来到图书用户首页</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>新书推荐</h2>
+            <div class="book-list">
+                <div class="book" th:each="book : ${newBooks}">
+                    <img th:src="${book.coverImageUrl}" alt="封面">
+                    <p th:text="${book.title}"></p>
+                </div>
+            </div>
+            <a th:href="@{/books(sort='new')}" class="btn btn-primary mt-3">更多详情</a>
+        </div>
+        <div class="col-md-6">
+            <h2>热门借阅</h2>
+            <div class="book-list">
+                <div class="book" th:each="book : ${popularBooks}">
+                    <img th:src="${book.coverImageUrl}" alt="封面">
+                    <p th:text="${book.title}"></p>
+                </div>
+            </div>
+            <a th:href="@{/books(sort='popular')}" class="btn btn-primary mt-3">更多详情</a>
+        </div>
+    </div>
+    <div class="mt-4">
+        <h3>公告</h3>
+        <p th:text="${announcement} ?: '暂无公告'"></p>
+    </div>
+    <div class="mt-4">
+        <h3>文本摘选</h3>
+        <p th:text="${excerpt} ?: '暂无摘选'"></p>
+    </div>
+</div>
+</body>
+</html>

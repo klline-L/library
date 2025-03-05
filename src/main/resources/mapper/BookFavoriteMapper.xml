@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.BookFavoriteMapper">
+
+    <!-- 定义 Result Map -->
+    <resultMap id="BookFavoriteResultMap" type="com.example.bookmanage.entity.BookFavorite">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="bookId" column="book_id"/>
+        <result property="addedDate" column="added_date"/>
+    </resultMap>
+
+    <!-- 插入收藏记录 -->
+    <insert id="insert" parameterType="com.example.bookmanage.entity.BookFavorite" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO book_favorites (user_id, book_id, added_date)
+        VALUES (#{userId}, #{bookId}, #{addedDate})
+    </insert>
+
+    <!-- 根据用户 ID 查询收藏记录 -->
+    <select id="findByUserId" resultMap="BookFavoriteResultMap">
+        SELECT * FROM book_favorites WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据用户 ID 和图书 ID 删除收藏记录 -->
+    <delete id="deleteByUserIdAndBookId">
+        DELETE FROM book_favorites WHERE user_id = #{userId} AND book_id = #{bookId}
+    </delete>
+
+</mapper>

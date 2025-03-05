@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.example.bookmanage.entity.User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role"/>
+        <result property="registerDate" column="register_date"/>
+        <result property="email" column="email"/>
+        <result property="gender" column="gender"/>
+        <result property="avatar" column="avatar"/>
+        <!-- 如果有 lastUsernameUpdate 字段 -->
+        <result property="lastUsernameUpdate" column="last_username_update"/>
+    </resultMap>
+
+    <!-- 查询所有用户 -->
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT * FROM users
+    </select>
+
+    <!-- 根据 ID 查询用户 -->
+    <select id="findById" resultMap="UserResultMap">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <!-- 根据用户名查询用户 -->
+    <select id="findByUsername" resultMap="UserResultMap">
+        SELECT * FROM users WHERE username = #{username}
+    </select>
+
+    <!-- 插入用户 -->
+    <insert id="insert" parameterType="com.example.bookmanage.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password, role, register_date)
+        VALUES (#{username}, #{password}, #{role}, #{registerDate})
+    </insert>
+
+    <!-- 更新用户信息，移除多余逗号 -->
+    <update id="update" parameterType="com.example.bookmanage.entity.User">
+        UPDATE users
+        SET username = #{username},
+            password = #{password},
+            role = #{role},
+            email = #{email},
+            gender = #{gender},
+            avatar = #{avatar},
+            last_username_update = #{lastUsernameUpdate}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="delete">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <!-- 分页查询用户 -->
+    <select id="findUsersByPage" resultMap="UserResultMap">
+        SELECT * FROM users LIMIT #{offset}, #{limit}
+    </select>
+</mapper>

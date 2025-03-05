@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>书籍详情</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 th:text="${book.title}">书籍标题</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <img th:src="${book.coverImageUrl}" class="img-fluid" alt="书籍封面">
+            <div class="mt-2">
+                <form th:action="@{'/books/' + ${book.id} + '/like'}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-outline-primary">点赞</button>
+                </form>
+                <span th:if="${hasLiked}" class="badge bg-success">已点赞</span>
+                <span th:text="${likeCount}"></span> 点赞
+                <form th:action="@{'/books/' + ${book.id} + '/dislike'}" method="post" class="d-inline ms-2">
+                    <button type="submit" class="btn btn-outline-danger">点踩</button>
+                </form>
+                <span th:if="${hasDisliked}" class="badge bg-danger">已点踩</span>
+                <span th:text="${dislikeCount}"></span> 点踩
+            </div>
+        </div>
+        <div class="col-md-8">
+            <p>作者: <span th:text="${book.author}"></span></p>
+            <p>ISBN: <span th:text="${book.isbn}"></span></p>
+            <p>价格: <span th:text="'￥' + ${book.price}"></span></p>
+            <p>查看次数: <span th:text="${book.viewCount}"></span></p>
+            <p>状态: <span th:text="${book.status == 'available'} ? '闲置' : '租借中'"></span></p>
+            <div th:if="${canBorrow}" class="d-inline-block">
+                <form th:action="@{'/books/' + ${book.id} + '/borrow'}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-primary">借阅</button>
+                </form>
+            </div>
+            <div class="d-inline-block ms-3">
+                <form th:action="@{'/books/' + ${book.id} + '/favorite'}" method="post" class="d-inline" th:if="${!isFavorited}">
+                    <button type="submit" class="btn btn-success">立即收藏</button>
+                </form>
+                <form th:action="@{'/books/' + ${book.id} + '/favorite/remove'}" method="post" class="d-inline" th:if="${isFavorited}">
+                    <button type="submit" class="btn btn-danger">取消收藏</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <form th:action="@{'/books/' + ${book.id} + '/comment'}" method="post" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="text" class="form-control" placeholder="留下评论">
+                <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+        </form>
+        <h3>评论</h3>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="comment : ${comments}">
+                <p th:text="${comment.text}"></p>
+                <small th:text="${comment.createdDate != null} ? ${#dates.format(comment.createdDate, 'yyyy-MM-dd HH:mm:ss')} : '未设置'"></small>
+            </li>
+        </ul>
+    </div>
+    <a th:href="@{/books}" class="btn btn-secondary mt-3">返回书籍列表</a>
+</div>
+</body>
+</html>

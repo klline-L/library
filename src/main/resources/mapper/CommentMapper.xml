@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.bookmanage.mapper.CommentMapper">
+    <insert id="insert" parameterType="Comment">
+        INSERT INTO comments (user_id, book_id, text, created_date) VALUES (#{userId}, #{bookId}, #{text}, NOW())
+    </insert>
+
+    <select id="getCommentsByBookId" parameterType="long" resultType="Comment">
+        SELECT * FROM comments WHERE book_id = #{bookId}
+    </select>
+</mapper>
